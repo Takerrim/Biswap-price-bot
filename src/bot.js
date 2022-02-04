@@ -1,4 +1,5 @@
 const axios = require('axios').default
+const { save, parse } = require('./helpers/fs')
 
 const emojies = {
   arrowUp: '\u2B06',
@@ -8,11 +9,13 @@ const emojies = {
 class Bot {
   constructor(token) {
     this.token = token
-    this.members = new Map()
+    this.members = parse()
   }
 
   async sendPrice(oldPrice, newPrice) {
     try {
+      this.members = parse()
+
       const promises = []
       this.members.forEach((id) => {
         promises.push(
@@ -37,12 +40,15 @@ class Bot {
   }
 
   async getUpdates() {
-    const response = await axios.get(`https://api.telegram.org/bot${this.token}/getUpdates`)
-    response.data.result.forEach((item) => {
-      if (item.message && !this.members.has(item.message.from.username)) {
-        this.members.set(item.message.from.username, item.message.from.id)
+    const { data } = await axios.get(`https://api.telegram.org/bot${this.token}/getUpdates`)
+
+    data.result.forEach((item) => {
+      if (item.message && !this.members.includes(item.message.from.id)) {
+        this.members.push(item.message.from.id)
       }
     })
+
+    save(this.members)
   }
 }
 

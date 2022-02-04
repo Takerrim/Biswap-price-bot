@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const { ethers } = require("ethers");
-const abi = require('./abi.json')
+const abi = require('./data/abi.json')
 
 const Bot = require('./bot')
 
