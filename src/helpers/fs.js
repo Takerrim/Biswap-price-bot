@@ -3,7 +3,10 @@ const path = require('path')
 
 const MEMBERS_PATH = path.resolve(__dirname, '../data/memberIds.json')
 
-const save = (members) => writeFileSync(MEMBERS_PATH, JSON.stringify(members))
+const save = (members) => {
+  const data = [...new Set([...parse(), ...members])]
+  writeFileSync(MEMBERS_PATH, JSON.stringify(data))
+}
 
 const parse = () => JSON.parse(readFileSync(MEMBERS_PATH).toString())
 
