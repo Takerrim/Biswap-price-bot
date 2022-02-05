@@ -2,8 +2,8 @@ const axios = require('axios').default
 const { save, parse } = require('./helpers/fs')
 
 const emojies = {
-  arrowUp: '\u2B06',
-  arrowDown: '\u2B07'
+  up: '\uD83D\uDC46',
+  down: '\u2B07'
 }
 
 class Bot {
@@ -23,7 +23,7 @@ class Bot {
             { 
               parse_mode: 'HTML',
               chat_id: id,
-              text: `${newPrice > oldPrice ? emojies.arrowUp : emojies.arrowDown} <strong>$${newPrice}</strong>`
+              text: `${newPrice > oldPrice ? emojies.up : emojies.down} <strong>$${newPrice}</strong>`
             },
             {
               headers: { 'Content-Type': 'application/json'}
