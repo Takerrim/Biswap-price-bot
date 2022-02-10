@@ -1,23 +1,25 @@
-const axios = require('axios').default
-const { save, parse } = require('./helpers/fs')
+import axios from 'axios'
+import { parse, save } from './helpers/index.js'
 
 const emojies = {
   up: '\uD83D\uDC46',
   down: '\u2B07'
 }
 
-class Bot {
+const MEMBERS_PATH = new URL('./data/memberIds.json', import.meta.url)
+
+export default class Bot {
   constructor(token) {
     this.token = token
-    this.members = parse()
+    this.membersIds = parse(MEMBERS_PATH)
   }
 
   async sendPrice(oldPrice, newPrice) {
     try {
-      this.members = parse()
+      this.membersIds = parse(MEMBERS_PATH)
 
       const promises = []
-      this.members.forEach((id) => {
+      this.membersIds.forEach((id) => {
         promises.push(
           axios.post(`https://api.telegram.org/bot${this.token}/sendMessage`,
             { 
@@ -43,13 +45,11 @@ class Bot {
     const { data } = await axios.get(`https://api.telegram.org/bot${this.token}/getUpdates`)
 
     data.result.forEach((item) => {
-      if (item.message && !this.members.includes(item.message.from.id)) {
-        this.members.push(item.message.from.id)
+      if (item.message && !this.membersIds.includes(item.message.from.id)) {
+        this.membersIds.push(item.message.from.id)
       }
     })
 
-    save(this.members)
+    save(this.membersIds, MEMBERS_PATH)
   }
 }
-
-module.exports = Bot
