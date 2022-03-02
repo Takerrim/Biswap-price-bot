@@ -7,4 +7,7 @@ export const save = (members, path) => {
 
 export const parse = (path) => JSON.parse(readFileSync(path).toString())
 
-export const getBswPrice = (reserves) => (reserves[0].toString() / reserves[1].toString()).toPrecision(3)
+/**
+ * @param {Array<number>} reserves
+ */
+export const getBswPrice = ([base, quote]) => (base.toString() / quote.toString()).toPrecision(3)

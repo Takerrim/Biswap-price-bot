@@ -13,6 +13,7 @@ async function run() {
   const reserves = await contract.functions.getReserves()
   const price = getBswPrice(reserves)
   await bot.getUpdates()
+  await bot.saveMembers()
 
   if (oldPrice !== price) {
     await bot.sendPrice(oldPrice, price)
